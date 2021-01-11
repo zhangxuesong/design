@@ -2,6 +2,7 @@ package IdGenerator
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"math/rand"
 	"os"
@@ -25,12 +26,10 @@ type RandomIdGenerator struct {
 }
 
 //生成随机ID。这些ID仅在极端情况下可以重复。
-//@return 随机ID
-//@return error
 func (rig RandomIdGenerator) Generate() (string, error) {
 	substrOfHostName, err := rig.getLastfieldOfHostName()
 	if err != nil {
-		return "", err
+		return "", errors.New("IdGeneration Failure")
 	}
 	currentTimeMillis := time.Now().Unix()
 	randomString := rig.GenerateRandomAlphameric(8)
@@ -41,7 +40,7 @@ func (rig RandomIdGenerator) Generate() (string, error) {
 func (rig *RandomIdGenerator) getLastfieldOfHostName() (string, error) {
 	hostName, err := os.Hostname()
 	if err != nil {
-		return "", err
+		return "", errors.New("Unknown Host")
 	}
 	substrOfHostName := rig.GetLastSubstrSplittedByDot(hostName)
 	return substrOfHostName, nil
@@ -52,7 +51,7 @@ func (rig *RandomIdGenerator) GetLastSubstrSplittedByDot(hostName string) string
 	return tokens[len(tokens)-1]
 }
 
-func (rig *RandomIdGenerator) GenerateRandomAlphameric(length int) string {
+func (rig *RandomIdGenerator) GenerateRandomAlphameric(length uint) string {
 	randomChars := make([]byte, length)
 	count := 0
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -67,6 +66,5 @@ func (rig *RandomIdGenerator) GenerateRandomAlphameric(length int) string {
 			count++
 		}
 	}
-	//fmt.Printf("this chars is : %v.\n", randomChars)
 	return bytes.NewBuffer(randomChars).String()
 }

@@ -51,20 +51,22 @@ func TestGenerateRandomAlphameric(t *testing.T) {
 	if len(actualRandomString) != 6 {
 		t.Errorf("length must be 6, %d.\n", len(actualRandomString))
 	}
-	//for _, v := range actualRandomString {
-	//	c := byte(v)
-	//	if !('0' <= c && c <= '9') || !('a' <= c && c <= 'z') || !('A' <= c && c <= 'Z') {
-	//		t.Errorf("must be in [0-9|a-z|A-Z], %c.\n", c)
-	//		break
-	//	}
-	//}
-	//actualRandomString = random.GenerateRandomAlphameric(0)
-	//if actualRandomString == "" {
-	//	t.Errorf("must be not empty, %s.\n", actualRandomString)
-	//}
-	//actualRandomString = random.GenerateRandomAlphameric(-1)
-	//if actualRandomString == "" {
-	//	t.Errorf("must be not empty, %s.\n", actualRandomString)
-	//}
+	for _, v := range actualRandomString {
+		c := byte(v)
+		if ('0' <= c && c <= '9') || ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') {
+
+		} else {
+			t.Errorf("must be in [0-9|a-z|A-Z], %c.\n", c)
+			break
+		}
+	}
+	actualRandomString = random.GenerateRandomAlphameric(0)
+	if actualRandomString != "" {
+		t.Errorf("must be not empty, %s.\n", actualRandomString)
+	}
+	actualRandomString = random.GenerateRandomAlphameric(-1)
+	if actualRandomString != "" {
+		t.Errorf("must be not empty, %s.\n", actualRandomString)
+	}
 	t.Deadline()
 }
